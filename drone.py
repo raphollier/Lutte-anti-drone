@@ -19,6 +19,11 @@ class Drone:
         
         self.name="nom_test"
 
+        # Vitesse du drone (en pixels par frame)
+        self.vx = 0
+        self.vy = 0
+
+
     def draw(self, surface):
         """
         Dessine le drone sous forme de rectangle sur la surface donnée.
@@ -26,3 +31,11 @@ class Drone:
         """
         rect = pygame.Rect(self.x, self.y, self.width, self.height)
         pygame.draw.rect(surface, self.color, rect)
+
+
+    def update_position(self):
+        """
+        Met à jour la position du drone en fonction de sa vitesse.
+        """
+        self.x += self.vx
+        self.y += self.vy
