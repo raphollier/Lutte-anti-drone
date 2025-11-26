@@ -17,10 +17,17 @@ fond_carte_rgb=(255, 255, 255)
 
 # On crée quelques drones à des positions différentes
 drones = [
-    Drone(100, 100, color=(0, 255, 0)),   # drone vert
-    Drone(300, 200, color=(0, 0, 255)),   # drone bleu
 
-    Drone(380, 280, width=40, height=40, color=(0, 255, 0)),   # drone vert=surveillance
+    # Drones ennemis:
+    Drone(100, 100, color=(255, 0, 0)),   # drone rouge
+
+    # Drones amis:
+    Drone(600, 400, color=(0, 0, 255)),   # drone bleu
+    Drone(300, 200, color=(0, 0, 255)),   # drone bleu
+    Drone(500, 100, color=(0, 0, 255)),   # drone bleu
+    Drone(100, 500, color=(0, 0, 255)),   # drone bleu
+
+    Drone(380, 280, width=40, height=40, color=(34, 120, 15)),   # drone vert=surveillance
 ]
 
 
