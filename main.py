@@ -7,7 +7,6 @@ from drone import Drone # On importe la classe Drone définie dans le fichier dr
 # ---------- #Paramètres de la simulation ----------
 
 
-
 #Dimensions de la carte:
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -17,35 +16,24 @@ WINDOW_HEIGHT = 600
 fond_carte_rgb=(255, 255, 255)
 
 
+# On crée quelques drones à des positions différentes:
 
-# Vitesse de déplacement de l'intercepteur vers la cible (en pixels par frame)
-INTERCEPT_SPEED = 0.1
+drones_amis = [
+    Drone(50, 50, color=(0, 0, 255)),   # drone bleu=intercepteur
+    Drone(300, 200, color=(0, 0, 255)),  
+    Drone(500, 100, color=(0, 0, 255)),   
+    Drone(100, 500, color=(0, 0, 255)),   
 
-
-
-# On crée quelques drones à des positions différentes
-drones = [
-
-    # Drones ennemis:
-    Drone(300, 400, color=(255, 0, 0)),   # drone rouge
-
-    # Drones amis:
-    Drone(50, 50, color=(0, 0, 255)),   # drone bleu
-    Drone(300, 200, color=(0, 0, 255)),   # drone bleu
-    Drone(500, 100, color=(0, 0, 255)),   # drone bleu
-    Drone(100, 500, color=(0, 0, 255)),   # drone bleu
-
-    Drone(380, 280, width=40, height=40, color=(34, 120, 15)),   # drone vert=surveillance
+    Drone(380, 280, width=40, height=40, vitesse=0, color=(34, 120, 15)),   # drone vert=surveillance
 ]
 
+drones_ennemis = [
+    Drone(300, 400, color=(255, 0, 0)),   # drone rouge
+    Drone(600, 400, color=(255, 0, 0)),   # drone rouge
+]
 
-# Drone ennemi
-drone_ennemi = drones[0]
-
-# Drone intercepteur
-drone_intercepteur = drones[1]
-drone_intercepteur.vx = 0.05 # On lui donne une vitesse (en pixels par frame)
-drone_intercepteur.vy = 0.05
+# On définit la cible pour notre simulation:
+drone_cible=drones_ennemis[0]
 
 
 # ---------- Initialisation Pygame ----------
@@ -59,12 +47,11 @@ pygame.display.set_caption("Simulation tactique - Carte + drones")
 # ---------- Boucle principale ----------
 
 
-def orienter_drone_vers_cible(drone_source, drone_cible, speed):
+def orienter_drone_vers_cible(drone_source, drone_cible, vitesse):
     """
     Calcule un vecteur de direction de drone_source vers drone_cible
     et met à jour vx, vy pour que drone_source se dirige vers drone_cible.
 
-    speed : vitesse (module) en pixels par frame.
     """
     # Différence de position
     dx = drone_cible.x - drone_source.x
@@ -83,8 +70,8 @@ def orienter_drone_vers_cible(drone_source, drone_cible, speed):
         ny = dy / distance
 
         # On multiplie par la vitesse voulue
-        drone_source.vx = nx * speed
-        drone_source.vy = ny * speed
+        drone_source.vx = nx * vitesse
+        drone_source.vy = ny * vitesse
 
 
 
@@ -98,13 +85,15 @@ while running:
 
     # Dessin du fond (la carte)
     window.fill(fond_carte_rgb)  # gris foncé
+   
 
+    # Lancer la poursuite du drone cibble:
+    for drone in drones_amis:
+        orienter_drone_vers_cible(drone, drone_cible, drone.vitesse)
 
-    # Ajuster la vitesse de l'intercepteur pour qu'il se dirige vers l'ennemi
-    orienter_drone_vers_cible(drone_intercepteur, drone_ennemi, INTERCEPT_SPEED)
 
     # Dessin des drones
-    for drone in drones:
+    for drone in drones_amis + drones_ennemis:
         drone.update_position()
         drone.draw(window)
 

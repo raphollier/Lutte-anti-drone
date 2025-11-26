@@ -1,7 +1,7 @@
 import pygame
 
 class Drone:
-    def __init__(self, x, y, width=20, height=20, color=(0, 255, 0)):
+    def __init__(self, x, y, width=20, height=20, vitesse=0.05, color=(0, 255, 0)):
         """
         Représente un drone sur la carte.
 
@@ -11,17 +11,17 @@ class Drone:
         """
 
         #On définit ici tous les attributs que possèdent un objet "Drone":
+
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.vitesse = vitesse # Vitesse de déplacement du drone en mouvement(en pixels par frame) (le drone peut etre à l'arret, sa vitesse ne changera pas, mais ses vecteurs direction oui)
         self.color = color
-        
-        self.name="nom_test"
 
-        # Vitesse du drone (en pixels par frame)
-        self.vx = 0
-        self.vy = 0
+        # Vecteurs vitesses initiaux:
+        self.vx=0
+        self.vy=0
 
 
     def draw(self, surface):
