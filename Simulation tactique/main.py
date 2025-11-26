@@ -1,0 +1,1 @@
+# Dans ce fichier qu'on va créer la situation et choisir les différents paramètres de simulation
