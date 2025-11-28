@@ -28,6 +28,11 @@ window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Simulation tactique - Carte + drones")
 
 
+# Horloge pour contrôler la fréquence d'update (FPS)
+clock = pygame.time.Clock()
+FPS = 60  # ou 30 pour moins charger le CPU
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # Dossier où se trouve ce fichier main.py
 IMAGE_DIR = os.path.join(BASE_DIR, "images") # Dossier des images (dans "Simulation tactique/images")
 
@@ -54,7 +59,7 @@ drones_amis = [
 ]
 
 drones_ennemis = [
-    Drone(50, 280, width=25, height=25, color=(255, 0, 0), vitesse=0.2, image=image_drone_ennemi),   # drone rouge
+    Drone(50, 280, width=25, height=25, color=(255, 0, 0), vitesse=2, image=image_drone_ennemi),   # drone rouge
     Drone(600, 400, width=25, height=25, color=(255, 0, 0), image=image_drone_ennemi),   # drone rouge
 ]
 
@@ -132,8 +137,9 @@ while running:
         drone.draw(window)
 
 
-    # Mise à jour de l'affichage
-    pygame.display.flip()
+    
+    pygame.display.flip() # Mise à jour de l'affichage    
+    clock.tick(FPS) # Limite la boucle à FPS images par seconde
 
 # On ferme la fenetre: sortie propre
 pygame.quit()
