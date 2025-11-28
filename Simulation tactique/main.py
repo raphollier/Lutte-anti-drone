@@ -19,12 +19,15 @@ fond_carte_rgb=(255, 255, 255)
 # On crée quelques drones à des positions différentes:
 
 drones_amis = [
-    Drone(50, 50, color=(0, 0, 255)),   # drone bleu=intercepteur
+
+    # drones bleus=intercepteurs
+    Drone(50, 50, color=(0, 0, 0)),   
     Drone(300, 200, color=(0, 0, 255)),  
     Drone(500, 100, color=(0, 0, 255)),   
     Drone(100, 500, color=(0, 0, 255)),   
 
-    Drone(380, 280, width=40, height=40, vitesse=0, color=(34, 120, 15)),   # drone vert=surveillance
+    # drone vert=surveillance
+    Drone(380, 280, width=40, height=40, vitesse=0, color=(34, 120, 15)),   
 ]
 
 drones_ennemis = [
@@ -50,7 +53,9 @@ pygame.display.set_caption("Simulation tactique - Carte + drones")
 # ---------- Boucle principale ----------
 
 running = True
+
 while running:
+
     # Gestion des événements
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -59,6 +64,13 @@ while running:
 
     # Dessin du fond (la carte)
     window.fill(fond_carte_rgb)  # gris foncé
+
+
+
+    dist = drones_amis[0].distance_vers_drone(drone_cible)
+    print(dist)
+    print("")
+
    
 
     # Lancer la poursuite du drone cibble:

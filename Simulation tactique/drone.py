@@ -25,6 +25,9 @@ class Drone:
         self.vy=0
 
 
+    # ----------- Méthodes indispensable pour simuler le drone:--------------
+
+
     def draw(self, surface):
         """
         Dessine le drone sous forme de rectangle sur la surface donnée.
@@ -41,6 +44,8 @@ class Drone:
         self.x += self.vx
         self.y += self.vy
 
+
+# ----------- Autres méthodes:--------------
 
     def orienter_vers_position(self, cible_x, cible_y):
         """
@@ -74,3 +79,15 @@ class Drone:
         """
         self.orienter_vers_position(autre_drone.x, autre_drone.y)
 
+
+
+    def distance_vers_drone(self, autre_drone):
+        """
+        Retourne la distance entre ce drone et un autre drone.
+        """
+        dx = autre_drone.x - self.x
+        dy = autre_drone.y - self.y
+        
+        distance=math.hypot(dx, dy)#racine de la somme des carrés
+
+        return distance
