@@ -28,12 +28,15 @@ drones_amis = [
 ]
 
 drones_ennemis = [
-    Drone(300, 400, color=(255, 0, 0)),   # drone rouge
+    Drone(0, 300, color=(255, 0, 0), vitesse=0.08),   # drone rouge
     Drone(600, 400, color=(255, 0, 0)),   # drone rouge
 ]
 
 # On définit la cible pour notre simulation:
 drone_cible=drones_ennemis[0]
+
+# Et on la met en mouvement:
+drone_cible.orienter_vers_drone(drones_amis[4])
 
 
 # ---------- Initialisation Pygame ----------
@@ -45,35 +48,6 @@ pygame.display.set_caption("Simulation tactique - Carte + drones")
 
 
 # ---------- Boucle principale ----------
-
-
-def orienter_drone_vers_cible(drone_source, drone_cible, vitesse):
-    """
-    Calcule un vecteur de direction de drone_source vers drone_cible
-    et met à jour vx, vy pour que drone_source se dirige vers drone_cible.
-
-    """
-    # Différence de position
-    dx = drone_cible.x - drone_source.x
-    dy = drone_cible.y - drone_source.y
-
-    # Distance entre les deux drones
-    distance = math.hypot(dx, dy)  # équivalent à sqrt(dx*dx + dy*dy)
-
-    if distance == 0:
-        # Les deux drones sont au même endroit → pas de mouvement
-        drone_source.vx = 0
-        drone_source.vy = 0
-    else:
-        # On normalise le vecteur (dx, dy) pour en faire un vecteur de longueur 1
-        nx = dx / distance
-        ny = dy / distance
-
-        # On multiplie par la vitesse voulue
-        drone_source.vx = nx * vitesse
-        drone_source.vy = ny * vitesse
-
-
 
 running = True
 while running:
@@ -89,7 +63,7 @@ while running:
 
     # Lancer la poursuite du drone cibble:
     for drone in drones_amis:
-        orienter_drone_vers_cible(drone, drone_cible, drone.vitesse)
+        drone.orienter_vers_drone(drone_cible)
 
 
     # Dessin des drones

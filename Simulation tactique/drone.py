@@ -1,7 +1,8 @@
 import pygame
+import math
 
 class Drone:
-    def __init__(self, x, y, width=20, height=20, vitesse=0.05, color=(0, 255, 0)):
+    def __init__(self, x, y, width=20, height=20, vitesse=0.1, color=(0, 255, 0)): # Par défaut: une certaine hauteur/largeur, vitesse, couleur
         """
         Représente un drone sur la carte.
 
@@ -39,3 +40,37 @@ class Drone:
         """
         self.x += self.vx
         self.y += self.vy
+
+
+    def orienter_vers_position(self, cible_x, cible_y):
+        """
+        Oriente ce drone vers une position (cible_x, cible_y)
+        en réglant vx et vy à partir de self.vitesse.
+        """
+        dx = cible_x - self.x
+        dy = cible_y - self.y
+
+        distance = math.hypot(dx, dy)
+
+        if distance == 0:
+            # On est déjà sur la cible
+            self.vx = 0
+            self.vy = 0
+            return
+
+        # vecteur directionnel de longueur 1
+        nx = dx / distance
+        ny = dy / distance
+
+        # on applique la vitesse scalaire du drone
+        self.vx = nx * self.vitesse
+        self.vy = ny * self.vitesse
+
+
+
+    def orienter_vers_drone(self, autre_drone):
+        """
+        Oriente ce drone vers un autre drone (autre_drone).
+        """
+        self.orienter_vers_position(autre_drone.x, autre_drone.y)
+
