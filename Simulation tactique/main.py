@@ -30,8 +30,12 @@ pygame.display.set_caption("Simulation tactique - Carte + drones")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # Dossier où se trouve ce fichier main.py
 IMAGE_DIR = os.path.join(BASE_DIR, "images") # Dossier des images (dans "Simulation tactique/images")
+
 image_drone_ami_path = os.path.join(IMAGE_DIR, "drone_ami.png") # Chemin complet vers l'image du drone allié
 image_drone_ami = pygame.image.load(image_drone_ami_path).convert_alpha()
+
+image_drone_ennemi_path = os.path.join(IMAGE_DIR, "drone_ennemi.png") # Chemin complet vers l'image du drone ennemi
+image_drone_ennemi = pygame.image.load(image_drone_ennemi_path).convert_alpha()
 
 
 # ----------Création des drones-----------
@@ -39,19 +43,19 @@ image_drone_ami = pygame.image.load(image_drone_ami_path).convert_alpha()
 # On crée quelques drones à des positions différentes:
 drones_amis = [
 
-    # drones bleus=intercepteurs
-    Drone(50, 50, color=(0, 0, 0)),   
-    Drone(300, 200, color=(0, 0, 255), image=image_drone_ami),  
-    Drone(500, 100, color=(0, 0, 255), image=image_drone_ami),   
-    Drone(100, 500, color=(0, 0, 255), image=image_drone_ami),   
+    # drones bleus=intercepteurs.
+    Drone(300, 200, color=(0, 0, 255)),   
+    Drone(0, 280, image=image_drone_ami),  
+    Drone(500, 100, image=image_drone_ami),   
+    Drone(100, 500, image=image_drone_ami),   
 
     # drone vert=surveillance
     Drone(380, 280, width=40, height=40, vitesse=0, color=(34, 120, 15)),   
 ]
 
 drones_ennemis = [
-    Drone(0, 300, color=(255, 0, 0), vitesse=0.3),   # drone rouge
-    Drone(600, 400, color=(255, 0, 0)),   # drone rouge
+    Drone(50, 280, width=25, height=25, color=(255, 0, 0), vitesse=0.2, image=image_drone_ennemi),   # drone rouge
+    Drone(600, 400, width=25, height=25, color=(255, 0, 0), image=image_drone_ennemi),   # drone rouge
 ]
 
 
@@ -87,9 +91,9 @@ while running:
 
     if simulation_en_cours:
 
-        dist = drones_amis[0].distance_vers_drone(drone_cible)
-        print(dist)
-        print("")
+        # dist = drones_amis[0].distance_vers_drone(drone_cible)
+        # print(dist)
+        # print("")
 
     
 
