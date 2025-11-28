@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Drone:
-    def __init__(self, x, y, width=20, height=20, vitesse=0.1, color=(0, 255, 0)): # Par défaut: une certaine hauteur/largeur, vitesse, couleur
+    def __init__(self, x, y, width=20, height=20, vitesse=0.2, color=(0, 255, 0)): # Par défaut: une certaine hauteur/largeur, vitesse, couleur
         """
         Représente un drone sur la carte.
 

@@ -34,7 +34,7 @@ drones_amis = [
 ]
 
 drones_ennemis = [
-    Drone(0, 300, color=(255, 0, 0), vitesse=0.08),   # drone rouge
+    Drone(0, 100, color=(255, 0, 0), vitesse=0.3),   # drone rouge
     Drone(600, 400, color=(255, 0, 0)),   # drone rouge
 ]
 
