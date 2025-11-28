@@ -17,7 +17,7 @@ SEUIL_COLLISION = 10  # en pixels
 
 
 #Couleur de fond de la carte:
-fond_carte_rgb=(255, 255, 255)
+fond_carte_rgb=(122, 122, 122)
 
 
 
@@ -36,11 +36,14 @@ FPS = 60  # ou 30 pour moins charger le CPU
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # Dossier où se trouve ce fichier main.py
 IMAGE_DIR = os.path.join(BASE_DIR, "images") # Dossier des images (dans "Simulation tactique/images")
 
-image_drone_ami_path = os.path.join(IMAGE_DIR, "drone_ami.png") # Chemin complet vers l'image du drone allié
+image_drone_ami_path = os.path.join(IMAGE_DIR, "drone_ami.png") # Chemin complet vers l'image
 image_drone_ami = pygame.image.load(image_drone_ami_path).convert_alpha()
 
-image_drone_ennemi_path = os.path.join(IMAGE_DIR, "drone_ennemi.png") # Chemin complet vers l'image du drone ennemi
+image_drone_ennemi_path = os.path.join(IMAGE_DIR, "drone_ennemi.png")
 image_drone_ennemi = pygame.image.load(image_drone_ennemi_path).convert_alpha()
+
+image_drone_surveillance_path = os.path.join(IMAGE_DIR, "drone_surveillance.png")
+image_drone_surveillance = pygame.image.load(image_drone_surveillance_path).convert_alpha()
 
 
 # ----------Création des drones-----------
@@ -55,11 +58,11 @@ drones_amis = [
     Drone(100, 500, image=image_drone_ami),   
 
     # drone vert=surveillance
-    Drone(380, 280, width=40, height=40, vitesse=0, color=(34, 120, 15)),   
+    Drone(380, 280, vitesse=0, image=image_drone_surveillance),   
 ]
 
 drones_ennemis = [
-    Drone(50, 280, width=25, height=25, color=(255, 0, 0), vitesse=2, image=image_drone_ennemi),   # drone rouge
+    Drone(0, 0, width=25, height=25, color=(255, 0, 0), vitesse=2, image=image_drone_ennemi),   # drone rouge
     Drone(600, 400, width=25, height=25, color=(255, 0, 0), image=image_drone_ennemi),   # drone rouge
 ]
 
@@ -74,6 +77,29 @@ drone_surveillance=drones_amis[4]
 
 # Et on la met en mouvement:
 drone_cible.orienter_vers_drone(drone_surveillance)
+
+
+
+# ---------- Fonction pour déterminer quel drone est le plus près de la cible: ----------
+def trouver_allie_le_plus_proche(cible, drones_amis, drone_surveillance):
+    """
+    Retourne le drone allié (parmi drones_amis, sauf le drone_surveillance)
+    qui est le plus proche de 'cible'.
+    """
+    meilleur_drone = None
+    meilleure_distance = float("inf")
+
+    for drone in drones_amis:
+        # On ignore le drone de surveillance (vert)
+        if drone is drone_surveillance:
+            continue
+
+        dist = drone.distance_vers_drone(cible)
+        if dist < meilleure_distance:
+            meilleure_distance = dist
+            meilleur_drone = drone
+
+    return meilleur_drone
 
 
 
@@ -103,8 +129,18 @@ while running:
     
 
         # Lancer la poursuite du drone cible:
+        # On choisit le drone allié le plus proche de la cible
+        drone_intercepteur = trouver_allie_le_plus_proche(drone_cible, drones_amis, drone_surveillance)
+
+        # Lancer la poursuite du drone cible uniquement pour l'intercepteur
         for drone in drones_amis:
-            drone.orienter_vers_drone(drone_cible)
+            if drone is drone_intercepteur:
+                # Ce drone fonce vers la cible
+                drone.orienter_vers_drone(drone_cible)
+            else:
+                # Les autres restent immobiles (pour l'instant)
+                drone.vx = 0
+                drone.vy = 0
 
 
         # Mise à jour des positions
