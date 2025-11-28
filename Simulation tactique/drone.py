@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Drone:
-    def __init__(self, x, y, width=20, height=20, vitesse=0.2, color=(0, 255, 0)): # Par défaut: une certaine hauteur/largeur, vitesse, couleur
+    def __init__(self, x, y, width=28, height=20, vitesse=0.2, color=(0, 255, 0), image=None): # Par défaut: une certaine hauteur/largeur, vitesse, couleur
         """
         Représente un drone sur la carte.
 
@@ -25,16 +25,28 @@ class Drone:
         self.vy=0
 
 
+        # Image:
+        self.image = None
+        if image is not None:
+            # On adapte l'image à la taille du drone (width x height)
+            self.image = pygame.transform.scale(image, (self.width, self.height))
+
+
     # ----------- Méthodes indispensable pour simuler le drone:--------------
 
 
     def draw(self, surface):
         """
-        Dessine le drone sous forme de rectangle sur la surface donnée.
-        surface : par exemple la fenêtre Pygame (window)
+        Dessine le drone sur la surface donnée.
+        Si une image est fournie, on dessine l'image.
+        Sinon, on dessine un rectangle de couleur.
         """
-        rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        pygame.draw.rect(surface, self.color, rect)
+        if self.image is not None:
+            # On blitte l'image à la position (x, y)
+            surface.blit(self.image, (self.x, self.y))
+        else:
+            rect = pygame.Rect(self.x, self.y, self.width, self.height)
+            pygame.draw.rect(surface, self.color, rect)
 
 
     def update_position(self):
