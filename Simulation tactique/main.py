@@ -12,6 +12,9 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 
 
+SEUIL_COLLISION = 10  # en pixels
+
+
 #Couleur de fond de la carte:
 fond_carte_rgb=(255, 255, 255)
 
@@ -38,8 +41,11 @@ drones_ennemis = [
 # On définit la cible pour notre simulation:
 drone_cible=drones_ennemis[0]
 
+# On définit qui est le drone de surveillance:
+drone_surveillance=drones_amis[4]
+
 # Et on la met en mouvement:
-drone_cible.orienter_vers_drone(drones_amis[4])
+drone_cible.orienter_vers_drone(drone_surveillance)
 
 
 # ---------- Initialisation Pygame ----------
@@ -53,39 +59,65 @@ pygame.display.set_caption("Simulation tactique - Carte + drones")
 # ---------- Boucle principale ----------
 
 running = True
+simulation_en_cours = True   # contrôle la SIMULATION (mouvements, collisions)
 
 while running:
 
     # Gestion des événements
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT: # Si on clique sur la croix
             running = False
 
 
     # Dessin du fond (la carte)
     window.fill(fond_carte_rgb)  # gris foncé
 
+    if simulation_en_cours:
+
+        dist = drones_amis[0].distance_vers_drone(drone_cible)
+        print(dist)
+        print("")
+
+    
+
+        # Lancer la poursuite du drone cible:
+        for drone in drones_amis:
+            drone.orienter_vers_drone(drone_cible)
 
 
-    dist = drones_amis[0].distance_vers_drone(drone_cible)
-    print(dist)
-    print("")
-
-   
-
-    # Lancer la poursuite du drone cibble:
-    for drone in drones_amis:
-        drone.orienter_vers_drone(drone_cible)
+        # Mise à jour des positions
+        for drone in drones_amis + drones_ennemis:
+            drone.update_position()
 
 
-    # Dessin des drones
+        # Test de collision ennemi / drone de surveillance
+        distance_ennemi_surveillance = drone_cible.distance_vers_drone(drone_surveillance)
+        if distance_ennemi_surveillance < SEUIL_COLLISION:
+            print("⚠ Ennemi a atteint le drone vert -> fin de la simulation")
+            simulation_en_cours = False
+
+
+
+        # Test de collision allié / ennemi
+        for drone in drones_amis:
+            # On ignore le drone de surveillance
+            if drone is not drone_surveillance:
+                distance_allie_ennemi = drone.distance_vers_drone(drone_cible)
+                if distance_allie_ennemi < SEUIL_COLLISION:
+                    print("✅ Un drone allié a atteint l'ennemi -> fin de la simulation")
+                    simulation_en_cours = False
+                    break  # on sort de la boucle sur les alliés
+
+
+    
+    # Dessin des drones (on le fait meme si la simulation est arrêtée)
     for drone in drones_amis + drones_ennemis:
-        drone.update_position()
         drone.draw(window)
+
 
     # Mise à jour de l'affichage
     pygame.display.flip()
 
-# Sortie propre
+# On ferme la fenetre: sortie propre
 pygame.quit()
 sys.exit()
